@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: todolist
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todolist
+    ports:
+      - 5432:5432
