@@ -20,7 +20,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
             services.AddRouting(options => options.LowercaseUrls = true);
         })
     .ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder
-        .RegisterUseCases());
+        .RegisterUseCases().RegisterPersistence());
 
 builder.Services.AddControllers()
     .AddErrorFilterHandling();

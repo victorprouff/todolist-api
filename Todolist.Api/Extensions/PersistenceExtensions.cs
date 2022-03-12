@@ -1,5 +1,6 @@
 using Dapper;
 using Npgsql;
+using Todolist.Api.Data.Handlers;
 
 namespace Todolist.Api.Extensions;
 
@@ -9,6 +10,8 @@ public static class PersistenceExtensions
     {
         NpgsqlConnection.GlobalTypeMapper.UseNodaTime();
         DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+        SqlMapper.AddTypeHandler(new InstantHandler());
 
         return services;
     }
