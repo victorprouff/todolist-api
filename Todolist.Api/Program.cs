@@ -1,23 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Formatting.Json;
+using Todolist.Api.Exceptions;
+using Todolist.Api.Extensions;
 
-namespace Todolist.Api
-{
-    public class Program
-    {
-        public static void Main(string[] args)
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .UseSerilog((context, cfg) => cfg.GetConfiguration(context.Configuration, new JsonFormatter(renderMessage: true)))
+    .ConfigureServices(
+        (_, services) =>
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            services.AddPersistence();
+            services.AddMemoryCache();
+            services.AddOpenApi();
+            services.AddErrorOptions(builder.Configuration);
+            services.AddVersioning(1, 0);
+            services.AddRouting(options => options.LowercaseUrls = true);
+        })
+    .ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder
+        .RegisterUseCases());
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-    }
+builder.Services.AddControllers()
+    .AddErrorFilterHandling();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+app.UseVersionedOpenApi();
+app.UseLogging();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+await app.RunAsync();
