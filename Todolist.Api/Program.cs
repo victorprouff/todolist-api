@@ -23,13 +23,15 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
             services.AddRouting(options => options.LowercaseUrls = true);
         })
     .ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder
-        .RegisterUseCases().RegisterPersistence());
+        .RegisterUseCases()
+        .RegisterPersistence());
 
 builder.Services
     .AddControllers()
     .AddJsonOptions(
         options =>
         {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
         })
     .AddErrorFilterHandling();

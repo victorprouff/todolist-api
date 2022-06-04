@@ -1,5 +1,6 @@
 using Autofac;
 using NodaTime;
+using Todolist.Api.Data.Projections;
 using Todolist.Api.Data.Repositories;
 
 namespace Todolist.Api.Extensions;
@@ -22,6 +23,11 @@ public static class ApplicationExtensions
 
             return new TodoRepository(connectionString);
         }).As<Data.Repositories.Interfaces.TodoRepository>();
+
+        builder
+            .Register(
+                c => new GetTodoListsBuilder(c.Resolve<IConfiguration>().GetConnectionString("Database")))
+            .As<Todolist.Api.Data.Projections.Interfaces.GetTodoListsBuilder>();
 
         return builder;
     }

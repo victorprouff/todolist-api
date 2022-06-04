@@ -8,6 +8,5 @@ public interface TodoRepository
 {
     Task<Guid> CreateTodoListAsync(Todo todo, CancellationToken cancellationToken);
     Task UpdateTodoAsync(Todo todo, CancellationToken cancellationToken);
-    Task<Todo[]> GetTodosListAsync(CancellationToken cancellationToken);
     // Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken);
 }

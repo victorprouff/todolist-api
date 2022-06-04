@@ -37,15 +37,6 @@ public class TodoRepository : Interfaces.TodoRepository
             commandTimeout: 1);
     }
 
-    public async Task<Todo[]> GetTodosListAsync(CancellationToken cancellationToken)
-    {
-        await using var connection = GetConnection();
-        var todos = await connection.QueryAsync<Todo>(
-            @"SELECT title, description, deadline_at, started_at, ended_at FROM todo_list;",
-            commandTimeout: 1);
-        return todos.ToArray();
-    }
-
     // public async Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken)
     // {
     //     await using var connection = GetConnection();

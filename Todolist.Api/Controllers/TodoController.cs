@@ -1,10 +1,10 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
+using Todolist.Api.Data.Projections.Interfaces;
 using Todolist.Api.Data.Repositories.Interfaces;
 using Todolist.Api.Models;
 using Todolist.Api.TodoAggregate;
-using Task = Todolist.Api.TodoAggregate.Task;
 
 namespace Todolist.Api.Controllers;
 
@@ -16,12 +16,14 @@ namespace Todolist.Api.Controllers;
 public class TodoController : ControllerBase
 {
     private readonly TodoRepository repository;
+    private readonly GetTodoListsBuilder getTodoListsBuilder;
     private readonly IClock clock;
 
-    public TodoController(TodoRepository repository, IClock clock)
+    public TodoController(TodoRepository repository, GetTodoListsBuilder getTodoListsBuilder, IClock clock)
     {
         this.repository = repository;
         this.clock = clock;
+        this.getTodoListsBuilder = getTodoListsBuilder;
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public class TodoController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<IActionResult> GetTodoLists(CancellationToken cancellationToken)
     {
-        var todos = await repository.GetTodosListAsync(cancellationToken);
+        var todos = await getTodoListsBuilder.GetTodosListAsync(cancellationToken);
         return Ok(todos.Select(t => (GetTodoListsResponse)t));
     }
 
@@ -74,7 +76,6 @@ public class TodoController : ControllerBase
                 todoId,
                 updateTodoListRequest.Title,
                 updateTodoListRequest.Description,
-                new List<Task>(),
                 updateTodoListRequest.DeadlineAt,
                 updateTodoListRequest.StartedAt,
                 updateTodoListRequest.EndedAt), cancellationToken);

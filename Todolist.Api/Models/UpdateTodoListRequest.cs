@@ -10,7 +10,6 @@ public record UpdateTodoListRequest(string Title, string? Description, Instant? 
             Guid.Empty,
             response.Title,
             response.Description,
-            new List<TodoAggregate.Task>(),
             response.DeadlineAt,
             response.StartedAt,
             response.EndedAt);

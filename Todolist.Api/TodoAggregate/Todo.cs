@@ -2,7 +2,7 @@ using NodaTime;
 
 namespace Todolist.Api.TodoAggregate;
 
-public record Todo(Guid Id, string Title, string? Description, List<Task> Tasks, Instant? DeadlineAt, Instant? StartedAt, Instant? EndedAt);
+public record Todo(Guid Id, string Title, string? Description, Instant? DeadlineAt, Instant? StartedAt, Instant? EndedAt, List<Task>? Tasks = null);
 public record Task(Guid Id, string Title, string? Description, Status Status, Instant? StartedAt, Instant? EndedAt);
 
 public enum Status

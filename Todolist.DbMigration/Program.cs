@@ -1,6 +1,6 @@
-﻿using FluentMigrator.Runner;
+﻿using Todolist.DbMigration.Migrations;
+using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
-using Todolist.DbMigration.Migrations;
 
 var serviceProvider = new ServiceCollection()
     .AddFluentMigratorCore()
