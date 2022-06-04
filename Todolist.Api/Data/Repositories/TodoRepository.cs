@@ -1,5 +1,4 @@
 using Dapper;
-using NodaTime;
 using Npgsql;
 using Todolist.Api.TodoAggregate;
 using Task = System.Threading.Tasks.Task;

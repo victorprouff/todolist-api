@@ -1,7 +1,4 @@
-using NodaTime;
-using Todolist.Api.TodoAggregate;
 using Todolist.Api.TodoAggregate.Projections;
-using Task = Todolist.Api.TodoAggregate.Task;
 
 namespace Todolist.Api.Models;
 

@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Todolist.Api.Bases.ExceptionHandling.Filters;
 

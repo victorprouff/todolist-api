@@ -1,8 +1,6 @@
-using Autofac;
 using Dapper;
 using Npgsql;
 using Todolist.Api.Data.Handlers;
-using Todolist.Api.Data.Projections;
 
 namespace Todolist.Api.Extensions;
 

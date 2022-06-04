@@ -1,5 +1,4 @@
 using Dapper;
-using Todolist.Api.TodoAggregate;
 using Todolist.Api.TodoAggregate.Projections;
 
 namespace Todolist.Api.Data.Projections;
