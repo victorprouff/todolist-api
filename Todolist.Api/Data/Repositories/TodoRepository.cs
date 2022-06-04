@@ -2,6 +2,7 @@ using Dapper;
 using NodaTime;
 using Npgsql;
 using Todolist.Api.TodoAggregate;
+using Task = System.Threading.Tasks.Task;
 
 namespace Todolist.Api.Data.Repositories;
 
@@ -16,41 +17,41 @@ public class TodoRepository : Interfaces.TodoRepository
         this.connectionString = connectionString;
     }
 
-    public async Task<Guid> CreateTodoAsync(string title, string description, Instant currentDate, CancellationToken cancellationToken)
+    public async Task<Guid> CreateTodoListAsync(Todo todo, CancellationToken cancellationToken)
     {
         await using var connection = GetConnection();
         return await connection.ExecuteScalarAsync<Guid>(
-            @"INSERT INTO todo (title, description, created_at, updated_at)
-           VALUES (@Title, @Description, @CurrentDate, @CurrentDate)
+            @"INSERT INTO todo_list (title, description, deadline_at, started_at, ended_at)
+           VALUES (@Title, @Description, @DeadlineAt, @StartedAt, @EndedAt)
                 RETURNING id;",
-            new { Title = title, Description = description, CurrentDate = currentDate },
+            todo,
             commandTimeout: 1);
     }
 
-    public async Task UpdateTodoAsync(Guid id, string title, string description, Instant currentDate, CancellationToken cancellationToken)
+    public async Task UpdateTodoAsync(Todo todo, CancellationToken cancellationToken)
     {
         await using var connection = GetConnection();
         await connection.ExecuteAsync(
-            @"UPDATE todo SET title = @Title, description = @Description, updated_at = @CurrentDate WHERE id = @Id;",
-            new { Title = title, Description = description, CurrentDate = currentDate, @Id = id },
+            @"UPDATE todo_list SET title = @Title, description = @Description, deadline_at = @DeadlineAt, started_at = @StartedAt, ended_at = @EndedAt WHERE id = @Id;",
+            todo,
             commandTimeout: 1);
     }
 
-    public async Task<Todo[]> GetTodosAsync(CancellationToken cancellationToken)
+    public async Task<Todo[]> GetTodosListAsync(CancellationToken cancellationToken)
     {
         await using var connection = GetConnection();
         var todos = await connection.QueryAsync<Todo>(
-            @"SELECT id, title, description FROM todo;",
+            @"SELECT title, description, deadline_at, started_at, ended_at FROM todo_list;",
             commandTimeout: 1);
         return todos.ToArray();
     }
 
-    public async Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken)
-    {
-        await using var connection = GetConnection();
-        await connection.ExecuteAsync(
-            @"DELETE FROM todo WHERE id = @Id;",
-            new { Id = id },
-            commandTimeout: 1);
-    }
+    // public async Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken)
+    // {
+    //     await using var connection = GetConnection();
+    //     await connection.ExecuteAsync(
+    //         @"DELETE FROM todo_list WHERE id = @Id;",
+    //         new { Id = id },
+    //         commandTimeout: 1);
+    // }
 }

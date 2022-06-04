@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 using Serilog;
 using Serilog.Formatting.Json;
 using Todolist.Api.Exceptions;
@@ -22,7 +25,13 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder
         .RegisterUseCases().RegisterPersistence());
 
-builder.Services.AddControllers()
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(
+        options =>
+        {
+            options.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+        })
     .AddErrorFilterHandling();
 
 builder.Services.AddEndpointsApiExplorer();

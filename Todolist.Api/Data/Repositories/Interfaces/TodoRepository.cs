@@ -1,12 +1,13 @@
 using NodaTime;
 using Todolist.Api.TodoAggregate;
+using Task = System.Threading.Tasks.Task;
 
 namespace Todolist.Api.Data.Repositories.Interfaces;
 
 public interface TodoRepository
 {
-    Task<Guid> CreateTodoAsync(string title, string description, Instant currentDate, CancellationToken cancellationToken);
-    Task UpdateTodoAsync(Guid id, string title, string description, Instant currentDate, CancellationToken cancellationToken);
-    Task<Todo[]> GetTodosAsync(CancellationToken cancellationToken);
-    Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken);
+    Task<Guid> CreateTodoListAsync(Todo todo, CancellationToken cancellationToken);
+    Task UpdateTodoAsync(Todo todo, CancellationToken cancellationToken);
+    Task<Todo[]> GetTodosListAsync(CancellationToken cancellationToken);
+    // Task DeleteTodoAsync(Guid id, CancellationToken cancellationToken);
 }
