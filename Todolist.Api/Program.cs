@@ -8,6 +8,7 @@ using Serilog.Formatting.Json;
 using Todolist.Api.Exceptions;
 using Todolist.Api.Extensions;
 
+Log.Information("CreateBuilder");
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -26,6 +27,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         .RegisterUseCases()
         .RegisterPersistence());
 
+Log.Information("Builder services start");
 builder.Services
     .AddControllers()
     .AddJsonOptions(
@@ -55,4 +57,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Log.Information("Application Start");
 await app.RunAsync();
